@@ -11,7 +11,6 @@ void setup() {
   String[] devices = Capture.list();
   println(devices);
   reloadShader();
-  //frameRate(1);
 }
 
 void draw() {  
@@ -24,7 +23,7 @@ void draw() {
   float c2 = (mouseY/float(height) -0.5f)*1f;
   _shader.set("c1", c1);
   _shader.set("c2", c2);
-  _shader.set("time", millis()/3000.0f);
+  _shader.set("rotation", millis()/3000.0f);
   if (isCalibrating){
     _shader.set("calibrate", 1);
   }
