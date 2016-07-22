@@ -1,7 +1,7 @@
 import processing.video.*;
-import java.lang.*;
+
 Capture webcam;
-PShader _shader;
+PShader fractalShader;
 boolean isCalibrating = true;
 
 void setup() {
@@ -16,20 +16,20 @@ void setup() {
 void draw() {  
 
   webcam.read();
-  shader(_shader);
+  shader(fractalShader);
   image(webcam, 0, 0);
 
   float c1 = (mouseX/float(width) -0.5f)*1f;
   float c2 = (mouseY/float(height) -0.5f)*1f;
-  _shader.set("c1", c1);
-  _shader.set("c2", c2);
-  _shader.set("rotation", millis()/3000.0f);
+  fractalShader.set("c1", c1);
+  fractalShader.set("c2", c2);
+  fractalShader.set("rotation", millis()/3000.0f);
   if (isCalibrating){
-    _shader.set("calibrate", 1);
+    fractalShader.set("calibrate", 1);
   }
   else
   {
-    _shader.set("calibrate", 0);
+    fractalShader.set("calibrate", 0);
   }
 }
 
@@ -43,7 +43,7 @@ public void keyPressed() {
 
 public void reloadShader() {
   try {
-    _shader = loadShader("traptex.glsl");
+    fractalShader = loadShader("traptex.glsl");
   }
   catch (RuntimeException e) {
     e.printStackTrace();
