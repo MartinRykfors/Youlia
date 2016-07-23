@@ -4,6 +4,7 @@ Capture webcam;
 PShader fractalShader;
 boolean isCalibrating = true;
 PGraphics camGraphics;
+ArrayList<Preset> presets = new ArrayList<Preset>();
 float rotation = 0.0;
 
 void setup() {
@@ -27,10 +28,9 @@ void draw() {
   image(camGraphics, 0,0);
   textAlign(RIGHT, BOTTOM);
   text("@rykarn", width, height);
-  float c1 = (mouseX/float(width) -0.5f)*1f;
-  float c2 = (mouseY/float(height) -0.5f)*1f;
-  fractalShader.set("c1", c1);
-  fractalShader.set("c2", c2);
+  PVector fractalParameters = getFractalParameters();
+  fractalShader.set("c1", fractalParameters.x);
+  fractalShader.set("c2", fractalParameters.y);
   fractalShader.set("rotation", rotation);
   if (isCalibrating){
     fractalShader.set("calibrate", 1);
@@ -41,8 +41,26 @@ void draw() {
   }
 }
 
+public PVector getFractalParameters(){
+  float c1 = (mouseX/float(width) -0.5f)*1f;
+  float c2 = (mouseY/float(height) -0.5f)*1f;
+  return new PVector(c1, c2);
+}
+
+PresetPoint firstPoint = null;
+
 public void mousePressed() {
-  reloadShader();
+  if (firstPoint == null){
+    PVector fractalParameters = getFractalParameters();
+    firstPoint = new PresetPoint(fractalParameters.x, fractalParameters.y, rotation);
+  }
+  else{
+    PVector fractalParameters = getFractalParameters();
+    PresetPoint endPoint = new PresetPoint(fractalParameters.x, fractalParameters.y, rotation);
+    Preset preset = new Preset(firstPoint, endPoint);
+    presets.add(preset);
+    firstPoint = null;
+  }
 }
 
 public void keyPressed() {
@@ -53,7 +71,12 @@ public void keyPressed() {
     rotation -= 0.1;
   }
   else if (key == 's'){
-    saveFrame("read####.png");
+    //saveFrame("read####.png");
+    JSONArray json = new JSONArray();
+    for (int i = 0; i < presets.size(); i++){
+      json.setJSONObject(i, presets.get(i).toJSON());
+    }
+    saveJSONArray(json, "data/test.json");
   }
   else{
     isCalibrating = !isCalibrating;
