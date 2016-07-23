@@ -4,6 +4,7 @@ Capture webcam;
 PShader fractalShader;
 boolean isCalibrating = true;
 PGraphics camGraphics;
+float rotation = 0.0;
 
 void setup() {
   size(1200, 800, P2D);
@@ -30,7 +31,7 @@ void draw() {
   float c2 = (mouseY/float(height) -0.5f)*1f;
   fractalShader.set("c1", c1);
   fractalShader.set("c2", c2);
-  fractalShader.set("rotation", millis()/3000.0f);
+  fractalShader.set("rotation", rotation);
   if (isCalibrating){
     fractalShader.set("calibrate", 1);
   }
@@ -45,7 +46,18 @@ public void mousePressed() {
 }
 
 public void keyPressed() {
-  isCalibrating = !isCalibrating;
+  if (keyCode == UP){
+    rotation += 0.1;
+  }
+  else if (keyCode == DOWN){
+    rotation -= 0.1;
+  }
+  else if (key == 's'){
+    saveFrame("read####.png");
+  }
+  else{
+    isCalibrating = !isCalibrating;
+  }
 }
 
 public void reloadShader() {
