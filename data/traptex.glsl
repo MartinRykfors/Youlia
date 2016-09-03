@@ -61,11 +61,12 @@ void main() {
      p -= vec2(1.);
      p *= 1.0;
      vec3 col;
+     p *= vec2(-1.0,1.0);
      if(calibrate == 0){
           col = trapCoord(p);
      }
      else{
-          col = getTex(p*vec2(-1.0,1.0))*mask(p);
+          col = getTex(p)*mask(p);
      }
      gl_FragColor = vec4(col, 1);
 }
