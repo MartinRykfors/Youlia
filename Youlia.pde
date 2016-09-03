@@ -13,9 +13,10 @@ void setup() {
   String[] devices = Capture.list();
   println(devices);
   readPresets();
+  animationRunner = new AnimationRunner(new AnimationPlayList(presets, 600, 60));
   reloadShader();
   camGraphics = createGraphics(1200, 800, P2D);
-  webcam = new Capture(this, 1200, 800);
+  webcam = new Capture(this, 1200, 800, "FaceTime HD Camera", 30);
   webcam.start();
 }
 
@@ -34,8 +35,6 @@ void readPresets(){
                                       endPointJSON.getFloat("rotation"));
     presets.add(new Preset(start, end));
   }
-  animationRunner = new AnimationRunner(new AnimationPlayList(presets, 600, 60));
-  println(presets.size());
 }
 
 void draw() {
@@ -101,7 +100,6 @@ public void keyPressed() {
     rotation -= 0.1;
   }
   else if (key == 's'){
-    //saveFrame("read####.png");
     JSONArray json = new JSONArray();
     for (int i = 0; i < presets.size(); i++){
       json.setJSONObject(i, presets.get(i).toJSON());
