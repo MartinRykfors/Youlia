@@ -3,6 +3,7 @@ import processing.video.*;
 Capture webcam;
 PShader fractalShader;
 boolean isCalibrating = true;
+boolean isRecording = false;
 PGraphics camGraphics;
 ArrayList<Preset> presets;
 float rotation = 0.0;
@@ -48,7 +49,7 @@ void draw() {
   image(camGraphics, 0,0);
   textAlign(RIGHT, BOTTOM);
   text("@rykarn", width, height);
-  if (false){
+  if (isRecording){
     PVector fractalParameters = getFractalParameters();
     fractalShader.set("c1", fractalParameters.x);
     fractalShader.set("c2", fractalParameters.y);
@@ -99,12 +100,15 @@ public void keyPressed() {
   else if (keyCode == DOWN){
     rotation -= 0.1;
   }
-  else if (key == 's'){
+  else if (key == 's' && isRecording){
     JSONArray json = new JSONArray();
     for (int i = 0; i < presets.size(); i++){
       json.setJSONObject(i, presets.get(i).toJSON());
     }
     saveJSONArray(json, "data/presets.json");
+  }
+  else if (key == 'r'){
+    isRecording = !isRecording;
   }
   else{
     isCalibrating = !isCalibrating;
