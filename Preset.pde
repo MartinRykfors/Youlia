@@ -22,6 +22,10 @@ public class PresetPoint{
                            lerp(this.c2, next.c2, t),
                            lerp(this.rotation, next.rotation, t));
   }
+
+  public PresetPoint normalizedRotation(){
+    return new PresetPoint(this.c1, this.c2, this.rotation % (2*PI));
+  }
 }
 
 public class Preset{
@@ -45,6 +49,6 @@ public class Preset{
   }
 
   public PresetPoint transition(Preset next, float t){
-    return this.end.lerpTo(next.start, t);
+    return this.end.normalizedRotation().lerpTo(next.start.normalizedRotation(), t);
   }
 }
