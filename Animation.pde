@@ -72,6 +72,7 @@ public class AnimationPlayList{
     if (isTransitioning){
       isTransitioning = !isTransitioning;
       currentAnimation = nextAnimation;
+      println("starting animation " + currentAnimation);
       return getPresetAnimation(currentAnimation);
     }
     else{
